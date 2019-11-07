@@ -8,7 +8,7 @@ export function getQuickSortAnimations(array) {
 function quickSort(A, low, high, animations){
     if(low<high){
         const pivot_location = partition(A,low,high, animations);
-        quickSort(A, low, pivot_location, animations);
+        quickSort(A, low, pivot_location -1, animations);
         quickSort(A, pivot_location+1, high, animations);
     }
 }
@@ -19,22 +19,22 @@ function partition(A,low,high, animations){
     let leftwall = low;
     
     for(let i=low+1; i<high; i++){
-        animations.push([i,leftwall,'compare'])
-        animations.push([i,leftwall,'uncompare'])
+        animations.push([i,leftwall+1,'compare'])
+        animations.push([i,leftwall+1,'uncompare'])
         if(A[i]<pivot){
             //swap
-            animations.push([i,leftwall,'swap'])
+            animations.push([i,leftwall+1,'swap'])
             const buffer = A[i];
-            A[i] = A[leftwall];
-            A[leftwall] = buffer;
+            A[i] = A[leftwall+1];
+            A[leftwall+1] = buffer;
             //increment leftwall
-            leftwall++;
+            leftwall = leftwall + 1;
         }
     }
+    animations.push([low, low, 'unpivot'])
 
     //swap pivot
     animations.push([low,leftwall,'swap'])
-    animations.push([low,leftwall,'uncompare'])
     A[low] = A[leftwall]
     A[leftwall] = pivot
 

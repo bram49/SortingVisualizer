@@ -34,67 +34,82 @@ export default class SortingVisualizer extends React.Component {
         this.setState({array});
     }
 
+    playAnimation(animations){
+      for (let i = 0; i < animations.length; i++) {
+        const [barOne, barTwo, animate]= animations[i];
+        const arrayBars = document.getElementsByClassName('array-bar');
+        const barOneStyle = arrayBars[barOne].style;
+        const barTwoStyle = arrayBars[barTwo].style;
+        //if animation is swap
+        if (animate === 'swap') {
+          this.swap(barOneStyle, barTwoStyle, i);
+        }
+        //if animation is comparing
+        else if(animate === 'compare'){
+          this.compare(barOneStyle, barTwoStyle, i);
+        }
+        //if animation is uncomparing
+        else if(animate === 'uncompare'){
+          this.compare(barOneStyle, barTwoStyle, i);
+        }
+        //if animation is pivot
+        else if(animate === 'pivot'){
+          this.pivot(barOneStyle, i);
+        }
+        //if animation is unpivot
+        else if(animate === 'unpivot'){
+          this.pivot(barOneStyle, i);
+        }
+      }
+    }
+
+    swap(barOneStyle, barTwoStyle, time){
+      //swap bars
+      setTimeout(() => {
+        const newHeight = barOneStyle.height;
+        barOneStyle.height = barTwoStyle.height;
+        barTwoStyle.height = newHeight;
+      }, time * ANIMATION_SPEED_MS);
+    }
+
+    compare(barOneStyle, barTwoStyle, time){
+      //color comparing bars
+      setTimeout(() => {
+        barOneStyle.backgroundColor = SECONDARY_COLOR;
+        barTwoStyle.backgroundColor = SECONDARY_COLOR;
+      }, time * ANIMATION_SPEED_MS);
+    }
+
+    uncompare(barOneStyle, barTwoStyle, time){
+      //color comparing bars
+      setTimeout(() => {
+        barOneStyle.backgroundColor = PRIMARY_COLOR;
+        barTwoStyle.backgroundColor = PRIMARY_COLOR;
+      }, time * ANIMATION_SPEED_MS);
+    }
+
+    pivot(barStyle, time){
+      //color pivot
+      setTimeout(() => {
+        barStyle.backgroundColor = PIVOT_COLOR;
+      }, time * ANIMATION_SPEED_MS);
+    }
+
+    unpivot(barStyle, time){
+      //color pivot
+      setTimeout(() => {
+        barStyle.backgroundColor = PRIMARY_COLOR;
+      }, time * ANIMATION_SPEED_MS);
+    }
 
     mergeSort() {
         const animations = getMergeSortAnimations(this.state.array);
-        for (let i = 0; i < animations.length; i++) {
-          const arrayBars = document.getElementsByClassName('array-bar');
-          const [barOneIdx, barTwoIdx, animate]= animations[i];
-          const barOneStyle = arrayBars[barOneIdx].style;
-          const barTwoStyle = arrayBars[barTwoIdx].style;
-          //if animation is swap
-          if (animate === 'swap') {
-            setTimeout(() => {
-              const newHeight = barTwoIdx;
-              barOneStyle.height = `${newHeight}%`;
-            }, i * ANIMATION_SPEED_MS);
-          }
-          //if animation is comparing
-          else {
-            const color = animate === 'compare' ? SECONDARY_COLOR : PRIMARY_COLOR;
-            setTimeout(() => {
-              barOneStyle.backgroundColor = color;
-              barTwoStyle.backgroundColor = color;
-            }, i * ANIMATION_SPEED_MS);
-          }
-        }
+        this.playAnimation(animations);
       }
 
     quickSort() {
-        const javaScriptArray = this.state.array.slice().sort((a,b) => a - b);
-
         const animations = getQuickSortAnimations(this.state.array);
-        for (let i = 0; i < animations.length; i++) {
-          const arrayBars = document.getElementsByClassName('array-bar');
-          const [barOneIdx, barTwoIdx, animate]= animations[i];
-          const barOneStyle = arrayBars[barOneIdx].style;
-          const barTwoStyle = arrayBars[barTwoIdx].style;
-          //if animation is pivot
-          if(animate === 'swap'){
-            setTimeout(() => {
-              const newHeight = barTwoStyle.height;
-              barTwoStyle.height = barOneStyle.height;
-              barOneStyle.height = newHeight;
-                }, i * ANIMATION_SPEED_MS);
-            }else if(animate === 'compare'){
-                setTimeout(() => {
-                  barOneStyle.backgroundColor = SECONDARY_COLOR;
-                  barTwoStyle.backgroundColor = SECONDARY_COLOR;
-                }, i * ANIMATION_SPEED_MS);
-
-            }else if(animate === 'uncompare'){
-                setTimeout(() => {
-                  barOneStyle.backgroundColor = PRIMARY_COLOR;
-                  barTwoStyle.backgroundColor = PRIMARY_COLOR;
-                }, i * ANIMATION_SPEED_MS);
-              
-            }else if(animate === 'pivot'){
-                setTimeout(() => {
-                  barOneStyle.backgroundColor = PIVOT_COLOR;
-                }, i * ANIMATION_SPEED_MS);
-            
-            }
-        }
+        this.playAnimation(animations);
     }
 
     heapSort() {}
@@ -141,3 +156,4 @@ function arraysAreEqual(array1, array2){
     }
     return true;
 }
+
