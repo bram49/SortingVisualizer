@@ -1,12 +1,13 @@
 export function getQuickSortAnimations(array) {
     const animations = [];
     const auxiliaryArray = array.slice();
-    quickSort(auxiliaryArray,0,auxiliaryArray.length, animations)
+    quickSort(auxiliaryArray,0,auxiliaryArray.length-1, animations)
     return animations
 }
 
 function quickSort(A, low, high, animations){
     if(low<high){
+        //partition pivot, pivot is in right place
         const pivot_location = partition(A,low,high, animations);
         quickSort(A, low, pivot_location -1, animations);
         quickSort(A, pivot_location+1, high, animations);
@@ -14,29 +15,28 @@ function quickSort(A, low, high, animations){
 }
 
 function partition(A,low,high, animations){
-    animations.push([low, low, 'pivot'])
-    const pivot = A[low];
-    let leftwall = low;
+    const pivot = A[high];
+    let i = low-1; //index of smaller element
     
-    for(let i=low+1; i<high; i++){
-        animations.push([i,leftwall+1,'compare'])
-        animations.push([i,leftwall+1,'uncompare'])
-        if(A[i]<pivot){
+    for(let j=low; j<high; j++){
+        animations.push([j,high,'pivot'])
+        animations.push([j,high,'uncompare'])
+        if(A[j]<pivot){
+            i++; //increment index of smaller element
             //swap
-            animations.push([i,leftwall+1,'swap'])
-            const buffer = A[i];
-            A[i] = A[leftwall+1];
-            A[leftwall+1] = buffer;
-            //increment leftwall
-            leftwall = leftwall + 1;
+            animations.push([i,j,'swap'])
+            let buffer = A[i];
+            A[i] = A[j];
+            A[j] = buffer;
         }
     }
-    animations.push([low, low, 'unpivot'])
 
     //swap pivot
-    animations.push([low,leftwall,'swap'])
-    A[low] = A[leftwall]
-    A[leftwall] = pivot
+    animations.push([i+1,high,'swap'])
+    animations.push([high, i+1, 'pivot'])
+    animations.push([high, i+1, 'uncompare'])
+    A[high] = A[i+1]
+    A[i+1] = pivot
 
-    return leftwall;
+    return i+1;
 }

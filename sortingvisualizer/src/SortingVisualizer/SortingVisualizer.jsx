@@ -50,15 +50,11 @@ export default class SortingVisualizer extends React.Component {
         }
         //if animation is uncomparing
         else if(animate === 'uncompare'){
-          this.compare(barOneStyle, barTwoStyle, i);
+          this.uncompare(barOneStyle, barTwoStyle, i);
         }
         //if animation is pivot
         else if(animate === 'pivot'){
-          this.pivot(barOneStyle, i);
-        }
-        //if animation is unpivot
-        else if(animate === 'unpivot'){
-          this.pivot(barOneStyle, i);
+          this.pivot(barOneStyle, barTwoStyle, i);
         }
       }
     }
@@ -88,17 +84,11 @@ export default class SortingVisualizer extends React.Component {
       }, time * ANIMATION_SPEED_MS);
     }
 
-    pivot(barStyle, time){
-      //color pivot
+    pivot(barOneStyle, barTwoStyle, time){
+      //color comparing bars
       setTimeout(() => {
-        barStyle.backgroundColor = PIVOT_COLOR;
-      }, time * ANIMATION_SPEED_MS);
-    }
-
-    unpivot(barStyle, time){
-      //color pivot
-      setTimeout(() => {
-        barStyle.backgroundColor = PRIMARY_COLOR;
+        barOneStyle.backgroundColor = SECONDARY_COLOR;
+        barTwoStyle.backgroundColor = PIVOT_COLOR;
       }, time * ANIMATION_SPEED_MS);
     }
 
