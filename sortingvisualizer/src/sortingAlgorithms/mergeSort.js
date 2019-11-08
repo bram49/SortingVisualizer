@@ -32,11 +32,12 @@ export function getMergeSortAnimations(array) {
     let j = middleIdx + 1;
     while (i <= middleIdx && j <= endIdx) {
       animations.push([i, j, 'compare']);
+      animations.push([i, j, 'uncompare']);
       if (auxiliaryArray[i] <= auxiliaryArray[j]) {
-        animations.push([k, auxiliaryArray[i], 'swap']);
+        animations.push([k, auxiliaryArray[i], 'merge']);
         mainArray[k++] = auxiliaryArray[i++];
       } else {
-        animations.push([k, auxiliaryArray[j], 'swap']);
+        animations.push([k, auxiliaryArray[j], 'merge']);
         mainArray[k++] = auxiliaryArray[j++];
       }
     }
@@ -44,13 +45,15 @@ export function getMergeSortAnimations(array) {
     //when out of j
     while (i <= middleIdx) {
       animations.push([i, i,'compare']);
-      animations.push([k, auxiliaryArray[i], 'swap']);
+      animations.push([i, i, 'uncompare']);
+      animations.push([k, auxiliaryArray[i], 'merge']);
       mainArray[k++] = auxiliaryArray[i++];
     }
     //when out of i
     while (j <= endIdx) {
       animations.push([j, j, 'compare']);
-      animations.push([k, auxiliaryArray[j], 'swap']);
+      animations.push([j, j, 'uncompare']);
+      animations.push([k, auxiliaryArray[j], 'merge']);
       mainArray[k++] = auxiliaryArray[j++];
     }
   }

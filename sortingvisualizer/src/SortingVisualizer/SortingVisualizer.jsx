@@ -6,7 +6,7 @@ import {getQuickSortAnimations} from '../sortingAlgorithms/quickSort';
 
 
 // Animation speed
-const ANIMATION_SPEED_MS = 10;
+const ANIMATION_SPEED_MS = 5;
 
 const PRIMARY_COLOR = 'turquoise';
 const SECONDARY_COLOR = 'red';
@@ -56,6 +56,10 @@ export default class SortingVisualizer extends React.Component {
         else if(animate === 'pivot'){
           this.pivot(barOneStyle, barTwoStyle, i);
         }
+        //if animation is merge
+        else if(animate === 'merge'){
+          this.merge(barOneStyle, barTwo, i);
+        }
       }
     }
 
@@ -89,6 +93,13 @@ export default class SortingVisualizer extends React.Component {
       setTimeout(() => {
         barOneStyle.backgroundColor = SECONDARY_COLOR;
         barTwoStyle.backgroundColor = PIVOT_COLOR;
+      }, time * ANIMATION_SPEED_MS);
+    }
+
+    merge(barOneStyle, barTwoID, time){
+      setTimeout(() => {
+        const newHeight = barTwoID;
+        barOneStyle.height = `${newHeight}%`;
       }, time * ANIMATION_SPEED_MS);
     }
 
