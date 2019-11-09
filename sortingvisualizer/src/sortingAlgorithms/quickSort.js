@@ -9,7 +9,7 @@ function quickSort(A, low, high, animations){
     if(low<high){
         //partition pivot, pivot is in right place
         const pivot_location = partition(A,low,high, animations);
-        quickSort(A, low, pivot_location -1, animations);
+        quickSort(A, low, pivot_location-1, animations);
         quickSort(A, pivot_location+1, high, animations);
     }
 }
@@ -24,19 +24,20 @@ function partition(A,low,high, animations){
         if(A[j]<pivot){
             i++; //increment index of smaller element
             //swap
-            animations.push([i,j,'swap'])
             let buffer = A[i];
             A[i] = A[j];
             A[j] = buffer;
+            animations.push([i,j,'swap'])
         }
     }
 
     //swap pivot
-    animations.push([i+1,high,'swap'])
-    animations.push([high, i+1, 'pivot'])
-    animations.push([high, i+1, 'uncompare'])
-    A[high] = A[i+1]
-    A[i+1] = pivot
+    i++;
+    A[high] = A[i]
+    A[i] = pivot
+    animations.push([i,high,'swap'])
+    animations.push([high, i, 'pivot'])
+    animations.push([high, i, 'uncompare'])
 
-    return i+1;
+    return i;
 }

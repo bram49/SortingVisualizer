@@ -2,6 +2,7 @@ import React from 'react';
 import './SortingVisualizer.css';
 import {getMergeSortAnimations} from '../sortingAlgorithms/mergeSort';
 import {getQuickSortAnimations} from '../sortingAlgorithms/quickSort';
+import {getBubbleSortAnimations} from '../sortingAlgorithms/bubbleSort';
 
 
 
@@ -20,6 +21,31 @@ export default class SortingVisualizer extends React.Component {
         this.state = {
             array: [],
         };
+    }
+
+    render(){
+        const {array} = this.state;
+
+        return (
+            <div className="array-container">
+            {array.map((value,idx) => (
+                <div 
+                className='array-bar' 
+                key={idx}
+                style={{
+                    backgroundColor: PRIMARY_COLOR,
+                    height: `${value}%`
+                    }}>
+                </div>
+            ))}
+            <button onClick={() => this.resetArray()}>Generate New Array</button>
+            <button onClick={() => this.mergeSort()}>Merge Sort</button>
+            <button onClick={() => this.quickSort()}>Quick Sort</button>
+            <button onClick={() => this.heapSort()}>Heap Sort</button>
+            <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
+
+            </div>
+        )
     }
 
     componentDidMount(){
@@ -115,39 +141,19 @@ export default class SortingVisualizer extends React.Component {
 
     heapSort() {}
 
-    bubbleSort() {} 
-
-    render(){
-        const {array} = this.state;
-
-        return (
-            <div className="array-container">
-            {array.map((value,idx) => (
-                <div 
-                className='array-bar' 
-                key={idx}
-                style={{
-                    backgroundColor: PRIMARY_COLOR,
-                    height: `${value}%`
-                    }}>
-                </div>
-            ))}
-            <button onClick={() => this.resetArray()}>Generate New Array</button>
-            <button onClick={() => this.mergeSort()}>Merge Sort</button>
-            <button onClick={() => this.quickSort()}>Quick Sort</button>
-            <button onClick={() => this.heapSort()}>Heap Sort</button>
-            <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
-
-            </div>
-        )
-    }
+    bubbleSort() {
+      const animations = getBubbleSortAnimations(this.state.array);
+      this.playAnimation(animations);} 
 }
+
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
+/*
 function arraysAreEqual(array1, array2){
     if (array1.length !== array2.length) return false;
     for(let i = 1; i<array1.length; i++){
@@ -157,4 +163,4 @@ function arraysAreEqual(array1, array2){
     }
     return true;
 }
-
+*/
