@@ -1,8 +1,9 @@
 import React from 'react';
 import './SortingVisualizer.css';
-import {getMergeSortAnimations} from '../sortingAlgorithms/mergeSort';
-import {getQuickSortAnimations} from '../sortingAlgorithms/quickSort';
-import {getBubbleSortAnimations} from '../sortingAlgorithms/bubbleSort';
+import { getMergeSortAnimations } from '../sortingAlgorithms/mergeSort';
+import { getQuickSortAnimations } from '../sortingAlgorithms/quickSort';
+import { getBubbleSortAnimations } from '../sortingAlgorithms/bubbleSort';
+import { getHeapSortAnimations } from '../sortingAlgorithms/heapSort';
 
 
 
@@ -15,141 +16,145 @@ const PIVOT_COLOR = 'green';
 
 export default class SortingVisualizer extends React.Component {
 
-    constructor(props){
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            array: [],
-        };
+    this.state = {
+      array: [],
+    };
+  }
+
+  render() {
+    const { array } = this.state;
+
+    return (
+      <div className="array-container">
+        {array.map((value, idx) => (
+          <div
+            className='array-bar'
+            key={idx}
+            style={{
+              backgroundColor: PRIMARY_COLOR,
+              height: `${value}%`
+            }}>
+          </div>
+        ))}
+        <button onClick={() => this.resetArray()}>Generate New Array</button>
+        <button onClick={() => this.mergeSort()}>Merge Sort</button>
+        <button onClick={() => this.quickSort()}>Quick Sort</button>
+        <button onClick={() => this.heapSort()}>Heap Sort</button>
+        <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
+
+      </div>
+    )
+  }
+
+  componentDidMount() {
+    this.resetArray();
+  }
+
+  resetArray() {
+    const array = [];
+    for (let i = 1; i < 200; i++) {
+      array.push(getRandomInt(5, 100))
     }
+    this.setState({ array });
+  }
 
-    render(){
-        const {array} = this.state;
-
-        return (
-            <div className="array-container">
-            {array.map((value,idx) => (
-                <div 
-                className='array-bar' 
-                key={idx}
-                style={{
-                    backgroundColor: PRIMARY_COLOR,
-                    height: `${value}%`
-                    }}>
-                </div>
-            ))}
-            <button onClick={() => this.resetArray()}>Generate New Array</button>
-            <button onClick={() => this.mergeSort()}>Merge Sort</button>
-            <button onClick={() => this.quickSort()}>Quick Sort</button>
-            <button onClick={() => this.heapSort()}>Heap Sort</button>
-            <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
-
-            </div>
-        )
-    }
-
-    componentDidMount(){
-        this.resetArray();
-    }
-
-    resetArray(){
-        const array = [];
-        for(let i=1; i<200; i++){
-            array.push(getRandomInt(5,100))
-        }
-        this.setState({array});
-    }
-
-    playAnimation(animations){
-      for (let i = 0; i < animations.length; i++) {
-        const [barOne, barTwo, animate]= animations[i];
-        const arrayBars = document.getElementsByClassName('array-bar');
-        const barOneStyle = arrayBars[barOne].style;
-        const barTwoStyle = arrayBars[barTwo].style;
-        //if animation is swap
-        if (animate === 'swap') {
-          this.swap(barOneStyle, barTwoStyle, i);
-        }
-        //if animation is comparing
-        else if(animate === 'compare'){
-          this.compare(barOneStyle, barTwoStyle, i);
-        }
-        //if animation is uncomparing
-        else if(animate === 'uncompare'){
-          this.uncompare(barOneStyle, barTwoStyle, i);
-        }
-        //if animation is pivot
-        else if(animate === 'pivot'){
-          this.pivot(barOneStyle, barTwoStyle, i);
-        }
-        //if animation is merge
-        else if(animate === 'merge'){
-          this.merge(barOneStyle, barTwo, i);
-        }
+  playAnimation(animations) {
+    for (let i = 0; i < animations.length; i++) {
+      const [barOne, barTwo, animate] = animations[i];
+      const arrayBars = document.getElementsByClassName('array-bar');
+      const barOneStyle = arrayBars[barOne].style;
+      const barTwoStyle = arrayBars[barTwo].style;
+      //if animation is swap
+      if (animate === 'swap') {
+        this.swap(barOneStyle, barTwoStyle, i);
+      }
+      //if animation is comparing
+      else if (animate === 'compare') {
+        this.compare(barOneStyle, barTwoStyle, i);
+      }
+      //if animation is uncomparing
+      else if (animate === 'uncompare') {
+        this.uncompare(barOneStyle, barTwoStyle, i);
+      }
+      //if animation is pivot
+      else if (animate === 'pivot') {
+        this.pivot(barOneStyle, barTwoStyle, i);
+      }
+      //if animation is merge
+      else if (animate === 'merge') {
+        this.merge(barOneStyle, barTwo, i);
       }
     }
+  }
 
-    swap(barOneStyle, barTwoStyle, time){
-      //swap bars
-      setTimeout(() => {
-        const newHeight = barOneStyle.height;
-        barOneStyle.height = barTwoStyle.height;
-        barTwoStyle.height = newHeight;
-      }, time * ANIMATION_SPEED_MS);
-    }
+  swap(barOneStyle, barTwoStyle, time) {
+    //swap bars
+    setTimeout(() => {
+      const newHeight = barOneStyle.height;
+      barOneStyle.height = barTwoStyle.height;
+      barTwoStyle.height = newHeight;
+    }, time * ANIMATION_SPEED_MS);
+  }
 
-    compare(barOneStyle, barTwoStyle, time){
-      //color comparing bars
-      setTimeout(() => {
-        barOneStyle.backgroundColor = SECONDARY_COLOR;
-        barTwoStyle.backgroundColor = SECONDARY_COLOR;
-      }, time * ANIMATION_SPEED_MS);
-    }
+  compare(barOneStyle, barTwoStyle, time) {
+    //color comparing bars
+    setTimeout(() => {
+      barOneStyle.backgroundColor = SECONDARY_COLOR;
+      barTwoStyle.backgroundColor = SECONDARY_COLOR;
+    }, time * ANIMATION_SPEED_MS);
+  }
 
-    uncompare(barOneStyle, barTwoStyle, time){
-      //color comparing bars
-      setTimeout(() => {
-        barOneStyle.backgroundColor = PRIMARY_COLOR;
-        barTwoStyle.backgroundColor = PRIMARY_COLOR;
-      }, time * ANIMATION_SPEED_MS);
-    }
+  uncompare(barOneStyle, barTwoStyle, time) {
+    //color comparing bars
+    setTimeout(() => {
+      barOneStyle.backgroundColor = PRIMARY_COLOR;
+      barTwoStyle.backgroundColor = PRIMARY_COLOR;
+    }, time * ANIMATION_SPEED_MS);
+  }
 
-    pivot(barOneStyle, barTwoStyle, time){
-      //color comparing bars
-      setTimeout(() => {
-        barOneStyle.backgroundColor = SECONDARY_COLOR;
-        barTwoStyle.backgroundColor = PIVOT_COLOR;
-      }, time * ANIMATION_SPEED_MS);
-    }
+  pivot(barOneStyle, barTwoStyle, time) {
+    //color comparing bars
+    setTimeout(() => {
+      barOneStyle.backgroundColor = SECONDARY_COLOR;
+      barTwoStyle.backgroundColor = PIVOT_COLOR;
+    }, time * ANIMATION_SPEED_MS);
+  }
 
-    merge(barOneStyle, barTwoID, time){
-      setTimeout(() => {
-        const newHeight = barTwoID;
-        barOneStyle.height = `${newHeight}%`;
-      }, time * ANIMATION_SPEED_MS);
-    }
+  merge(barOneStyle, barTwoID, time) {
+    setTimeout(() => {
+      const newHeight = barTwoID;
+      barOneStyle.height = `${newHeight}%`;
+    }, time * ANIMATION_SPEED_MS);
+  }
 
-    mergeSort() {
-        const animations = getMergeSortAnimations(this.state.array);
-        this.playAnimation(animations);
-      }
+  mergeSort() {
+    const animations = getMergeSortAnimations(this.state.array);
+    this.playAnimation(animations);
+  }
 
-    quickSort() {
-        const animations = getQuickSortAnimations(this.state.array);
-        this.playAnimation(animations);
-    }
+  quickSort() {
+    const animations = getQuickSortAnimations(this.state.array);
+    this.playAnimation(animations);
+  }
 
-    heapSort() {}
+  heapSort() {
+    const animations = getHeapSortAnimations(this.state.array);
+    this.playAnimation(animations);
+  }
 
-    bubbleSort() {
-      const animations = getBubbleSortAnimations(this.state.array);
-      this.playAnimation(animations);} 
+  bubbleSort() {
+    const animations = getBubbleSortAnimations(this.state.array);
+    this.playAnimation(animations);
+  }
 }
 
 function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
